@@ -9,9 +9,4 @@ export class AppController {
   public getHello(): string {
     return this.appService.getHello();
   }
-
-  @Get('api')
-  public getApiDoc() {
-    return 'api 문서 반환';
-  }
 }
