@@ -17,7 +17,7 @@ export class Article {
   @Column()
   description: string;
 
-  @Column()
+  @Column('text')
   body: string;
 
   @Column()
@@ -32,31 +32,10 @@ export class Article {
   @OneToMany(type => Comment, comment => comment.article)
   comments: Comment[];
 
-  @ManyToMany(type => User)
-  @JoinTable({
-    name: 'favorite',
-    joinColumn: {
-      name: 'articleId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'userId',
-      referencedColumnName: 'id',
-    },
-  })
+  @ManyToMany(type => User, user => user.favorites)
   favoriters: User[];
 
-  @ManyToMany(type => Tag)
-  @JoinTable({
-    name: 'tagging',
-    joinColumn: {
-      name: 'articleId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'tagId',
-      referencedColumnName: 'id',
-    },
-  })
+  @ManyToMany(type => Tag, tag => tag.articles)
+  @JoinTable({ name: 'tagging' })
   tags: Tag[];
 }

@@ -28,45 +28,47 @@ export class User {
   @OneToMany(type => Comment, comment => comment.author)
   comments: Comment[];
 
-  @ManyToMany(type => Article)
-  @JoinTable({
-    name: 'favorite',
-    joinColumn: {
-      name: 'userId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'articleId',
-      referencedColumnName: 'id',
-    },
-  })
+  @ManyToMany(type => Article, article => article.favoriters)
+  @JoinTable({ name: 'favorite' })
   favorites: Article[];
 
-  @ManyToMany(type => User)
+  @ManyToMany(type => User, user => user.followers)
   @JoinTable({
     name: 'follow',
     joinColumn: {
-      name: 'followId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
       name: 'followedId',
       referencedColumnName: 'id',
     },
+    inverseJoinColumn: {
+      name: 'followId',
+      referencedColumnName: 'id',
+    },
   })
-  follows: User[];
+  followings: User[];
 
-  @ManyToMany(type => User)
-  @JoinTable({
-    name: 'follow',
-    joinColumn: {
-      name: 'followedId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'followId',
-      referencedColumnName: 'id',
-    },
-  })
-  followed: User[];
+  @ManyToMany(type => User, user => user.followings)
+  followers: User[];
+
+  public addArticle(article: Article) {
+    this.articles.push(article);
+  }
+
+  public removeArticle(article: Article | number) {
+    this.articles = this.articles.filter((art) => {
+      if (typeof article === 'number') {
+        return art.id !== article;
+
+      } else {
+        return art.id !== article.id;
+      }
+    })
+  }
+
+  public addFavorite(article: Article) {
+    this.favorites.push(article);
+  }
+  
+  public follow(user: User) {
+    this.followings.push(user);
+  }
 }

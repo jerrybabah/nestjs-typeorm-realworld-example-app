@@ -9,17 +9,6 @@ export class Tag {
   @Column()
   name: string;
 
-  @ManyToMany(type => Article)
-  @JoinTable({
-    name: 'tagging',
-    joinColumn: {
-      name: 'tagId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'articleId',
-      referencedColumnName: 'id',
-    },
-  })
+  @ManyToMany(type => Article, article => article.tags)
   articles: Article[];
 }
