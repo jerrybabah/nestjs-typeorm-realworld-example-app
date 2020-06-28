@@ -31,7 +31,7 @@ export class Article {
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP', // TODO: 이거 제대로 값이 들어가는지 확인
+    default: () => 'CURRENT_TIMESTAMP',
     // TODO: onUpdate 설정은 어떻게? 문자열로 뭘 어떡하라는거? (onUpdate?: string)
   })
   public updatedAt!: Date;

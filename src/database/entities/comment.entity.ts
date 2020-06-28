@@ -19,7 +19,7 @@ export class Comment {
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
-    // TODO: new Date 확인, onUpdate 어떻게
+    // TODO: onUpdate 어떻게
   })
   public updatedAt!: Date;
 
