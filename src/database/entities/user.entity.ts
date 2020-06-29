@@ -40,11 +40,17 @@ export class User {
   @OneToMany(() => Comment, comment => comment.author)
   public comments?: Comment[];
 
-  @ManyToMany(() => Article, article => article.favoriters)
+  @ManyToMany(() => Article, article => article.favoriters, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinTable({ name: 'favorite' })
   public favorites?: Article[];
 
-  @ManyToMany(() => User, user => user.followers)
+  @ManyToMany(() => User, user => user.followers, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinTable({
     name: 'follow',
     joinColumn: {
@@ -58,7 +64,10 @@ export class User {
   })
   public followings?: User[];
 
-  @ManyToMany(() => User, user => user.followings)
+  @ManyToMany(() => User, user => user.followings, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   public followers?: User[];
 
   constructor(props?: { email: string, username: string, password: string, bio?: string, image?: string }) {

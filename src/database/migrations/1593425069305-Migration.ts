@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class Migration1593364857484 implements MigrationInterface {
-    name = 'Migration1593364857484'
+export class Migration1593425069305 implements MigrationInterface {
+    name = 'Migration1593425069305'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query("CREATE TABLE `comment` (`id` int NOT NULL AUTO_INCREMENT, `body` varchar(255) NOT NULL, `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `authorId` int NULL, `articleId` int NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
@@ -11,9 +11,9 @@ export class Migration1593364857484 implements MigrationInterface {
         await queryRunner.query("CREATE TABLE `favorite` (`userId` int NOT NULL, `articleId` int NOT NULL, INDEX `IDX_83b775fdebbe24c29b2b5831f2` (`userId`), INDEX `IDX_c0d2a3aa86fa8415db7349ede2` (`articleId`), PRIMARY KEY (`userId`, `articleId`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `follow` (`followId` int NOT NULL, `followedId` int NOT NULL, INDEX `IDX_17ddf2c0f751002248329ef04a` (`followId`), INDEX `IDX_f4a9d59861c87ba252ead40d84` (`followedId`), PRIMARY KEY (`followId`, `followedId`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `tagging` (`articleId` int NOT NULL, `tagId` int NOT NULL, INDEX `IDX_05d524ce1bf62c40a22e8aaf5f` (`articleId`), INDEX `IDX_9a33d6bc10f456687df9f8dbf7` (`tagId`), PRIMARY KEY (`articleId`, `tagId`)) ENGINE=InnoDB");
-        await queryRunner.query("ALTER TABLE `comment` ADD CONSTRAINT `FK_276779da446413a0d79598d4fbd` FOREIGN KEY (`authorId`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
-        await queryRunner.query("ALTER TABLE `comment` ADD CONSTRAINT `FK_c20404221e5c125a581a0d90c0e` FOREIGN KEY (`articleId`) REFERENCES `article`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
-        await queryRunner.query("ALTER TABLE `article` ADD CONSTRAINT `FK_a9c5f4ec6cceb1604b4a3c84c87` FOREIGN KEY (`authorId`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
+        await queryRunner.query("ALTER TABLE `comment` ADD CONSTRAINT `FK_276779da446413a0d79598d4fbd` FOREIGN KEY (`authorId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE");
+        await queryRunner.query("ALTER TABLE `comment` ADD CONSTRAINT `FK_c20404221e5c125a581a0d90c0e` FOREIGN KEY (`articleId`) REFERENCES `article`(`id`) ON DELETE CASCADE ON UPDATE CASCADE");
+        await queryRunner.query("ALTER TABLE `article` ADD CONSTRAINT `FK_a9c5f4ec6cceb1604b4a3c84c87` FOREIGN KEY (`authorId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE");
         await queryRunner.query("ALTER TABLE `favorite` ADD CONSTRAINT `FK_83b775fdebbe24c29b2b5831f2d` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
         await queryRunner.query("ALTER TABLE `favorite` ADD CONSTRAINT `FK_c0d2a3aa86fa8415db7349ede26` FOREIGN KEY (`articleId`) REFERENCES `article`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION");
         await queryRunner.query("ALTER TABLE `follow` ADD CONSTRAINT `FK_17ddf2c0f751002248329ef04ab` FOREIGN KEY (`followId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION");

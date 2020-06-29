@@ -23,9 +23,15 @@ export class Comment {
   })
   public updatedAt!: Date;
 
-  @ManyToOne(() => User, user => user.comments)
+  @ManyToOne(() => User, user => user.comments, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   public author?: User;
 
-  @ManyToOne(() => Article, article => article.comments)
+  @ManyToOne(() => Article, article => article.comments, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   public article?: Article;
 }

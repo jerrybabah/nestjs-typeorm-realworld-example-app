@@ -12,6 +12,9 @@ export class Tag {
   })
   public name!: string;
 
-  @ManyToMany(() => Article, article => article.tags)
+  @ManyToMany(() => Article, article => article.tags, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   public articles?: Article[];
 }
