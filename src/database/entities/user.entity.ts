@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, BeforeInsert } from 'typeorm';
 import { Article } from './article.entity';
 import { Comment } from './comment.entity';
 
@@ -78,6 +79,15 @@ export class User {
       this.bio = props.bio || null;
       this.image = props.image || null;
     }
+  }
+
+  @BeforeInsert()
+  private encryptPwd() {
+    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync());
+  }
+
+  public comparePwd(pwd: string) {
+    return bcrypt.compareSync(pwd, this.password);
   }
 
   // public isPersisted() {
