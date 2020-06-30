@@ -11,5 +11,6 @@ module.exports = {
   cli: {
     migrationsDir: 'src/database/migrations',
     entitiesDir: 'src/database/entities',
-  }
+  },
+  logging: process.env.NODE_ENV === 'development', // dev only
 }
