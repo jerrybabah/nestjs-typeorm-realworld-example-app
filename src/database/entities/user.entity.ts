@@ -120,19 +120,43 @@ export class User {
   //   this.articles = articles;
   // }
 
-  // public addFavorite(article: Article) {
-  //   if (this.favorites === undefined) {
-  //     throw new Error();
-  //   }
+  public favorite(article: Article | Article[]) {
 
-  //   this.favorites.push(article);
-  // }
+    if (this.favorites === undefined) {
+
+      if (this.id !== undefined) {
+        throw new Error('영속성을 갖는 user에 favorite을 추가하기 위해서는 쿼리 시, favorites를 정의해야 합니다.');
+
+      } else {
+        this.favorites = [];
+      }
+    }
+
+    if (article instanceof Article) {
+      this.favorites.push(article);
+    }
+    if (article instanceof Array) {
+      this.favorites = [...this.favorites, ...article];
+    }
+  }
   
-  // public follow(user: User) {
-  //   if (this.followings === undefined) {
-  //     throw new Error();
-  //   }
+  public follow(user: User | User[]) {
 
-  //   this.followings.push(user);
-  // }
+    if (this.followings === undefined) {
+
+      if (this.id !== undefined) {
+        throw new Error('영속성을 갖는 user에 follow를 추가하기 위해서는 쿼리 시, followings를 정의해야 합니다.');
+
+      } else {
+        this.followings = [];
+      }
+    }
+
+    if (user.constructor === Array) {
+      this.followings = [...this.followings, ...user];
+    } 
+    if (user.constructor === User) {
+      this.followings.push(user);
+    }
+  }
 }

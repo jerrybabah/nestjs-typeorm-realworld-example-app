@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { User } from './user.entity';
 import { Article } from './article.entity';
 
@@ -12,14 +12,11 @@ export class Comment {
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
   })
   public createdAt!: Date;
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    // TODO: onUpdate 어떻게
   })
   public updatedAt!: Date;
 
@@ -34,4 +31,23 @@ export class Comment {
     onDelete: 'CASCADE',
   })
   public article?: Article;
+
+  constructor(props?: { body: string, author: User, article: Article }) {
+    if (props !== undefined) {
+      this.body = props.body;
+      this.author = props.author;
+      this.article = props.article;
+    }
+  }
+
+  @BeforeInsert()
+  private beforeInsertHandler() {
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+  }
+
+  @BeforeUpdate()
+  private beforeUpdateHandler() {
+    this.updatedAt = new Date();
+  }
 }

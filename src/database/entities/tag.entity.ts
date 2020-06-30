@@ -17,4 +17,10 @@ export class Tag {
     onDelete: 'CASCADE',
   })
   public articles?: Article[];
+
+  constructor(props?: { name: string }) {
+    if (props !== undefined) {
+      this.name = props.name;
+    }
+  }
 }

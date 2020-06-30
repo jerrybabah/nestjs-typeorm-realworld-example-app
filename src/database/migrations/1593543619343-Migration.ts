@@ -1,13 +1,13 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class Migration1593425069305 implements MigrationInterface {
-    name = 'Migration1593425069305'
+export class Migration1593543619343 implements MigrationInterface {
+    name = 'Migration1593543619343'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query("CREATE TABLE `comment` (`id` int NOT NULL AUTO_INCREMENT, `body` varchar(255) NOT NULL, `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `authorId` int NULL, `articleId` int NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
+        await queryRunner.query("CREATE TABLE `comment` (`id` int NOT NULL AUTO_INCREMENT, `body` varchar(255) NOT NULL, `createdAt` timestamp NOT NULL, `updatedAt` timestamp NOT NULL, `authorId` int NULL, `articleId` int NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `user` (`id` int NOT NULL AUTO_INCREMENT, `email` varchar(255) NOT NULL, `username` varchar(255) NOT NULL, `password` varchar(255) NOT NULL, `bio` text NULL, `image` varchar(255) NULL, UNIQUE INDEX `IDX_e12875dfb3b1d92d7d7c5377e2` (`email`), UNIQUE INDEX `IDX_78a916df40e02a9deb1c4b75ed` (`username`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `tag` (`id` int NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, UNIQUE INDEX `IDX_6a9775008add570dc3e5a0bab7` (`name`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
-        await queryRunner.query("CREATE TABLE `article` (`id` int NOT NULL AUTO_INCREMENT, `slug` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` varchar(255) NOT NULL, `body` text NOT NULL, `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `authorId` int NULL, UNIQUE INDEX `IDX_0ab85f4be07b22d79906671d72` (`slug`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
+        await queryRunner.query("CREATE TABLE `article` (`id` int NOT NULL AUTO_INCREMENT, `slug` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` varchar(255) NOT NULL, `body` text NOT NULL, `createdAt` timestamp NOT NULL, `updatedAt` timestamp NOT NULL, `authorId` int NULL, UNIQUE INDEX `IDX_0ab85f4be07b22d79906671d72` (`slug`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `favorite` (`userId` int NOT NULL, `articleId` int NOT NULL, INDEX `IDX_83b775fdebbe24c29b2b5831f2` (`userId`), INDEX `IDX_c0d2a3aa86fa8415db7349ede2` (`articleId`), PRIMARY KEY (`userId`, `articleId`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `follow` (`followId` int NOT NULL, `followedId` int NOT NULL, INDEX `IDX_17ddf2c0f751002248329ef04a` (`followId`), INDEX `IDX_f4a9d59861c87ba252ead40d84` (`followedId`), PRIMARY KEY (`followId`, `followedId`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `tagging` (`articleId` int NOT NULL, `tagId` int NOT NULL, INDEX `IDX_05d524ce1bf62c40a22e8aaf5f` (`articleId`), INDEX `IDX_9a33d6bc10f456687df9f8dbf7` (`tagId`), PRIMARY KEY (`articleId`, `tagId`)) ENGINE=InnoDB");

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import slugify from 'slugify';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinTable, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { User } from './user.entity';
 import { Comment } from './comment.entity';
 import { Tag } from './tag.entity';
@@ -25,14 +26,11 @@ export class Article {
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
   })
   public createdAt!: Date;
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    // TODO: onUpdate 설정은 어떻게? 문자열로 뭘 어떡하라는거? (onUpdate?: string)
   })
   public updatedAt!: Date;
 
@@ -68,4 +66,27 @@ export class Article {
   })
   @JoinTable({ name: 'tagging' })
   public tags?: Tag[];
+
+  constructor(props?: { title: string, description: string, body: string, author: User, tags?: Tag[] }) {
+    if (props !== undefined) {
+      this.title = props.title;
+      this.description = props.description;
+      this.body = props.body;
+      this.author = props.author;
+      this.tags = props.tags;
+    }
+  }
+
+  @BeforeInsert()
+  private beforeInsertHandler() {
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+
+    this.slug = `${slugify(this.title)}-${Date.now()}`;
+  }
+
+  @BeforeUpdate()
+  private beforeUpdateHandler() {
+    this.updatedAt = new Date();
+  }
 }
