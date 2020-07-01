@@ -32,7 +32,7 @@ export const seedOptions: ISeedOptions = {
 }
 
 export async function seed(options: ISeedOptions) {
-  const connection = await createConnection();
+  const connection = await createConnection('cli');
 
   try {
     await connection.transaction(async (transactionalEntityManager) => {
@@ -43,6 +43,8 @@ export async function seed(options: ISeedOptions) {
       await seedFavorites(transactionalEntityManager, options);
     })
 
+    console.log('seed success.');
+
   } catch(e) {
     console.error('seed fail.\n', e);
     await connection.close();
@@ -51,7 +53,6 @@ export async function seed(options: ISeedOptions) {
 
 seed(seedOptions)
 .then(() => {
-  console.log('seed success.');
   process.exit();
 })
 .catch((reason) => console.error('db connection fail.\n', reason));
