@@ -1,4 +1,5 @@
 # RealWorld example app - Nestjs + TypeORM
+[프로젝트 관리 형황](https://trello.com/b/6XucTkhb/nestjstypeorm-realworld)  
 ## 프로젝트 배경
 __<문제 상황>__
 - [Nest.js](https://docs.nestjs.com/)와 [TypeORM](https://typeorm.io/)을 공부하기 위해서 무언가를 만들어보기로 했다.
