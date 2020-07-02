@@ -90,73 +90,151 @@ export class User {
     return bcrypt.compareSync(pwd, this.password);
   }
 
-  // public isPersisted() {
-  //   return this.id !== undefined;
-  // }
+  public isPersisted() {
+    return this.id !== undefined;
+  }
 
-  // public addArticle(article: Article) {
-  //   if (this.articles === undefined) {
-  //     throw new Error();
-  //   }
-  //   this.articles.push(article);
-  // }
+  public writeArticle(article: Article) {
 
-  // public removeArticle(article: Article | number) {
-  //   if (this.articles === undefined) {
-  //     throw new Error();
-  //   }
+    if (!this.isPersisted()) {
+      throw new Error('user의 article 추가는 영속성을 갖는 user에 한해서 가능합니다.');
+    }
 
-  //   this.articles = this.articles.filter((art) => {
-  //     if (typeof article === 'number') {
-  //       return art.id !== article;
+    if (this.articles === undefined) {
+      throw new Error('영속성을 가는 user의 article 추가를 위해서는 쿼리 시, articles르 정의해야 합니다.');
+    }
 
-  //     } else {
-  //       return art.id !== article.id;
-  //     }
-  //   })
-  // }
+    this.articles.push(article);
+  }
 
-  // public setArticles(articles: Article[]) {
-  //   this.articles = articles;
-  // }
+  public removeArticle(article: Article) {
+
+    if (!this.isPersisted()) {
+      throw new Error('user의 article 삭제는 영속성을 갖는 user에 한해서 가능합니다.');
+    }
+
+    if (this.articles === undefined) {
+      throw new Error('영속성을 가는 user의 article 삭제를 위해서는 쿼리 시, articles르 정의해야 합니다.');
+    }
+
+    const index = this.articles.findIndex((art) => art.id === article.id);
+    if (index >= 0) {
+      this.articles.splice(index, 1);
+    }
+  }
 
   public favorite(article: Article | Article[]) {
 
+    if (!this.isPersisted()) {
+      throw new Error('favorite은 영속성을 갖는 user에 한해서 가능합니다.');
+    }
+
     if (this.favorites === undefined) {
-
-      if (this.id !== undefined) {
-        throw new Error('영속성을 갖는 user에 favorite을 추가하기 위해서는 쿼리 시, favorites를 정의해야 합니다.');
-
-      } else {
-        this.favorites = [];
-      }
+      throw new Error('영속성을 갖는 user에 favorite을 추가하기 위해서는 쿼리 시, favorites를 정의해야 합니다.');
     }
 
     if (article instanceof Article) {
       this.favorites.push(article);
+
+    } else {
+      this.favorites.splice(this.favorites.length, 0, ...article)
     }
-    if (article instanceof Array) {
-      this.favorites = [...this.favorites, ...article];
+  }
+
+  public unfavorite(article: Article | Article[]) {
+
+    if (!this.isPersisted()) {
+      throw new Error('unfavorite은 영속성을 갖는 user에 한해서 가능합니다.');
+    }
+
+    if (this.favorites === undefined) {
+      throw new Error('영속성을 갖는 user에 unfavorite을 하기 위해서는 쿼리 시, favorites를 정의해야 합니다.');
+    }
+
+    if (article instanceof Article) {
+      const index = this.favorites.findIndex((favorite) => favorite.id === article.id);
+      if (index >= 0) {
+        this.favorites.splice(index, 1);
+      }
+
+    } else {
+      const indexes: number[] = [];
+
+      for (const a of article) {
+
+        const index = this.favorites.findIndex((favorite) => favorite.id === a.id);
+        if (index >= 0) {
+          indexes.push(index);
+        }
+      }
+
+      for (const i of indexes) {
+        this.favorites.splice(i, 1);
+      }
     }
   }
   
   public follow(user: User | User[]) {
 
-    if (this.followings === undefined) {
-
-      if (this.id !== undefined) {
-        throw new Error('영속성을 갖는 user에 follow를 추가하기 위해서는 쿼리 시, followings를 정의해야 합니다.');
-
-      } else {
-        this.followings = [];
-      }
+    if (!this.isPersisted()) {
+      throw new Error('follow는 영속성을 갖는 user에 한해서 가능합니다.');
     }
 
-    if (user.constructor === Array) {
-      this.followings = [...this.followings, ...user];
-    } 
-    if (user.constructor === User) {
+    if (this.followings === undefined) {
+      throw new Error('영속성을 갖는 user에 follow를 추가하기 위해서는 쿼리 시, followings를 정의해야 합니다.');
+    }
+
+    if (user instanceof Array) {
+      this.followings.splice(this.followings.length, 0, ...user);
+
+    } else {
       this.followings.push(user);
     }
+  }
+
+  public unfollow(user: User | User[]) {
+
+    if (!this.isPersisted()) {
+      throw new Error('unfollow는 영속성을 갖는 user에 한해서 할 수 있습니다.');
+    }
+
+    if (this.followings === undefined) {
+      throw new Error('영속성을 갖는 user가 unfollow를 하기 위해서는 쿼리 시, followings를 정의해야 합니다.');
+    }
+
+    if (user instanceof User) {
+      const index = this.followings.findIndex((following) => following.id === user.id);
+      if (index >= 0) {
+        this.followings.splice(index, 1);
+      }
+
+    } else {
+      const indexes: number[] = [];
+
+      for (const u of user) {
+
+        const index = this.followings.findIndex((following) => following.id === u.id);
+        if (index >= 0) {
+          indexes.push(index);
+        }
+      }
+
+      for (const i of indexes) {
+        this.followings.splice(i, 1);
+      }
+    }
+  }
+
+  public isFollowing(user: User) {
+
+    if (!this.isPersisted()) {
+      throw new Error('follow 여부는 영속성을 갖는 user에 한해서 확인할 수 있습니다.');
+    }
+
+    if (this.followings === undefined) {
+      throw new Error('영속성을 갖는 user의 follow 여부를 확인하기 위해서는 쿼리 시, followings를 정의해야 합니다.');
+    }
+
+    return this.followings.some((following) => following.id === user.id);
   }
 }
