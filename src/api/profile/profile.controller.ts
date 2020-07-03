@@ -1,10 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
+import { ProfileService } from './profile.service';
+import { IProfileDTO } from './profile.dto';
 
 @Controller('api/profiles')
 export class ProfileController {
+  constructor(
+    private profileService: ProfileService,
+  ) {}
 
   @Get(':username')
-  public getProfile() {
-    return '프로필 정보를 반환한다.';
+  public async getProfile(@Param('username') username: string): Promise<IProfileDTO> {
+    return this.profileService.getProfile(username);
   }
 }
