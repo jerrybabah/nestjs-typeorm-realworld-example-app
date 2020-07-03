@@ -32,14 +32,6 @@ export class Comment {
   })
   public article?: Article;
 
-  constructor(props?: { body: string, author: User, article: Article }) {
-    if (props !== undefined) {
-      this.body = props.body;
-      this.author = props.author;
-      this.article = props.article;
-    }
-  }
-
   @BeforeInsert()
   private beforeInsertHandler() {
     this.createdAt = new Date();
@@ -49,5 +41,13 @@ export class Comment {
   @BeforeUpdate()
   private beforeUpdateHandler() {
     this.updatedAt = new Date();
+  }
+
+  constructor(props?: { body: string, author: User, article: Article }) {
+    if (props !== undefined) {
+      this.body = props.body;
+      this.author = props.author;
+      this.article = props.article;
+    }
   }
 }

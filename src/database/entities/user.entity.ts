@@ -71,6 +71,11 @@ export class User {
   })
   public followers?: User[];
 
+  @BeforeInsert()
+  private encryptPwd() {
+    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync());
+  }
+
   constructor(props?: { email: string, username: string, password: string, bio?: string, image?: string }) {
     if (props !== undefined) {
       this.email = props.email;
@@ -79,11 +84,6 @@ export class User {
       this.bio = props.bio || null;
       this.image = props.image || null;
     }
-  }
-
-  @BeforeInsert()
-  private encryptPwd() {
-    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync());
   }
 
   public comparePwd(pwd: string) {
@@ -101,7 +101,7 @@ export class User {
     }
 
     if (this.articles === undefined) {
-      throw new Error('영속성을 가는 user의 article 추가를 위해서는 쿼리 시, articles르 정의해야 합니다.');
+      throw new Error('영속성을 갖는 user의 article 추가를 위해서는 쿼리 시, articles르 정의해야 합니다.');
     }
 
     this.articles.push(article);
@@ -114,7 +114,7 @@ export class User {
     }
 
     if (this.articles === undefined) {
-      throw new Error('영속성을 가는 user의 article 삭제를 위해서는 쿼리 시, articles르 정의해야 합니다.');
+      throw new Error('영속성을 갖는 user의 article 삭제를 위해서는 쿼리 시, articles르 정의해야 합니다.');
     }
 
     const index = this.articles.findIndex((art) => art.id === article.id);

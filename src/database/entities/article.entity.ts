@@ -67,16 +67,6 @@ export class Article {
   @JoinTable({ name: 'tagging' })
   public tags?: Tag[];
 
-  constructor(props?: { title: string, description: string, body: string, author: User, tags?: Tag[] }) {
-    if (props !== undefined) {
-      this.title = props.title;
-      this.description = props.description;
-      this.body = props.body;
-      this.author = props.author;
-      this.tags = props.tags;
-    }
-  }
-
   @BeforeInsert()
   private beforeInsertHandler() {
     this.createdAt = new Date();
@@ -88,5 +78,15 @@ export class Article {
   @BeforeUpdate()
   private beforeUpdateHandler() {
     this.updatedAt = new Date();
+  }
+
+  constructor(props?: { title: string, description: string, body: string, author: User, tags?: Tag[] }) {
+    if (props !== undefined) {
+      this.title = props.title;
+      this.description = props.description;
+      this.body = props.body;
+      this.author = props.author;
+      this.tags = props.tags;
+    }
   }
 }
